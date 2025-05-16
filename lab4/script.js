@@ -32,9 +32,9 @@ class BiDirectionalPriorityQueue {
       case "lowest":
         return this.queue.reduce((a, b) => (b.priority < a.priority ? b : a));
       case "oldest":
-        return this.queue.reduce((a, b) => (b.timestamp < a.timestamp ? b : a));
+        return this.queue[0];
       case "newest":
-        return this.queue.reduce((a, b) => (b.timestamp > a.timestamp ? b : a));
+        return this.queue[this.queue.length - 1];
       default:
         throw new Error("Unknown type for peek");
     }
