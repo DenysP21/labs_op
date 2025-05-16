@@ -1,7 +1,21 @@
 const fs = require("fs");
 const readline = require("readline");
 
-async function processFile(filePath) {
+function askUserForNumber() {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    rl.question("Введіть число для пошуку: ", (answer) => {
+      rl.close();
+      resolve(answer);
+    });
+  });
+}
+
+async function processFile(filePath, searchNumber) {
   const stream = fs.createReadStream(filePath, { encoding: "utf-8" });
 
   const rl = readline.createInterface({
@@ -12,6 +26,10 @@ async function processFile(filePath) {
   let count = 0;
 
   for await (const line of rl) {
+    if (line.includes(searchNumber)) {
+      console.log(`Знайдено рядок з числом: ${line}`);
+    }
+
     if (line.includes("рядок номер 999999")) {
       console.log("Знайдено останній рядок!");
     }
@@ -25,4 +43,9 @@ async function processFile(filePath) {
   console.log(`Оброблено: ${count} рядків. End`);
 }
 
-processFile("bigfile.txt");
+async function number() {
+  const searchNumber = await askUserForNumber();
+  await processFile("bigfile.txt", searchNumber);
+}
+
+number();
